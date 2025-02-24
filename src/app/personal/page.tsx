@@ -1,57 +1,37 @@
 'use client';
 
-import * as THREE from 'three';
-import { useRef, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls } from "@react-three/drei";
 
-import { Box, Background, Sphere, TorusKnot, ExtrudedStar } from './shapes';
+import { ExtrudedStar } from './shapes';
+import { useRouter } from 'next/navigation';
 
 
 export default function PersonalPage() {
-    const initCameraPos = 0;
-    const [posX, setPosX] = useState(initCameraPos);
-    const [posZ, setPosZ] = useState(initCameraPos);
-    const cameraRef = useRef<THREE.PerspectiveCamera>(null!);
+    const router = useRouter();
 
-    const handleXPosChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPosX(Number(event.target.value))
+    const handleClick = () => {
+        router.push('/personal/photo-journal');
     }
-
-    const handleZPosChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPosZ(Number(event.target.value))
-    }
-
-    useEffect(() => {
-        if (cameraRef.current) {
-            cameraRef.current.position.x = posX;
-            cameraRef.current.position.z = posZ;
-        }
-    }, [posX, posZ]);
-
 
     return (
         <div className="flex flex-col items-center justify-center w-full h-full">
-            <h1>Personal Page</h1>
+            <h1>{"Rowan's Personal Website"}</h1>
             <p className="personal-page__description">This is a personal page.</p>
-            <Slider min={-10} max={10} value={posX} onChange={handleXPosChange} />
-            <Slider min={-5} max={30} value={posZ} onChange={handleZPosChange} />
             <Canvas
             style={{flex: 1, width: '100%', height: '100%'}}
-            camera={{ position: [ 0, 2, 5] }}
-            onCreated={({ camera }) => {
-                cameraRef.current = camera as THREE.PerspectiveCamera;
-            }}
+            camera={{ position: [ 0, 2, 10] }}
             >
-                <ambientLight />
-                <spotLight position={[10, 0, 10]} angle={0.5} penumbra={1} decay={0} intensity={Math.PI} />
-                <pointLight position={[10, 10, 10]} decay={0} intensity={Math.PI} />
-                <Box position={[0, 0, 0]} />
-                <TorusKnot position={[3, 0, 0]} />
-                <ExtrudedStar position={[-3, 0, 0]} />
-                <Background position={[0, 0, -10]} />
-                <Sphere position={[4, 0, 4]} />
-                <OrbitControls />
+                {/* <TorusKnot position={[0, 0, 0]} /> */}
+                {/* <ambientLight /> */}
+                {/* <spotLight position={[10, 0, 10]} angle={0.5} penumbra={1} decay={0} intensity={Math.PI/2} /> */}
+                {/* <pointLight position={[10, 10, 10]} decay={0} intensity={Math.PI} /> */}
+                <ExtrudedStar
+                    position={[0, 0, 0]}
+                    onClick={() => handleClick()}
+                    // Make the cursor change to a pointer when hovering over the star
+                    onPointerEnter={() => document.body.style.cursor = 'pointer'}
+                    onPointerLeave={() => document.body.style.cursor = 'default'}
+                />
             </Canvas>
             {/* charmed circle svg */}
             {/* <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
@@ -71,24 +51,24 @@ export default function PersonalPage() {
     )
 }
 
-interface SliderProps {
-    min: number;
-    max: number;
-    value: number;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
+// interface SliderProps {
+//     min: number;
+//     max: number;
+//     value: number;
+//     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+// }
 
-function Slider({ min, max, value, onChange }: SliderProps) {
-    return (
-        <div>
-            <input
-            type="range"
-            min={min}
-            max={max}
-            value={value}
-            step={0.01}
-            onChange={(event) => onChange(event)}
-            />
-        </div>
-    )
-}
+// function Slider({ min, max, value, onChange }: SliderProps) {
+//     return (
+//         <div>
+//             <input
+//             type="range"
+//             min={min}
+//             max={max}
+//             value={value}
+//             step={0.01}
+//             onChange={(event) => onChange(event)}
+//             />
+//         </div>
+//     )
+// }

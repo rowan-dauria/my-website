@@ -1,7 +1,9 @@
 import { useFrame, ThreeElements } from '@react-three/fiber'
 import { useRef } from 'react';
 import * as THREE from 'three';
-
+import { FontLoader, TextGeometry } from 'three/examples/jsm/Addons.js';
+import bubbleFont from '../fonts/Modak_Regular.json';
+import { Environment } from '@react-three/drei';
 
 function Box(props: ThreeElements['mesh']) {
     const ref = useRef<THREE.Mesh>(null!) // null! avoids typescript non-null checks
@@ -17,14 +19,14 @@ function Box(props: ThreeElements['mesh']) {
         // onPointerOut={(event) => hover(false)}
         >
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color={'blue'} />
+        <meshStandardMaterial color={'blue'}/>
       </mesh>
     )
 }
 
 function Background(props: ThreeElements['mesh']) {
     return (
-        <mesh {...props}>
+        <mesh {...props} rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry args={[50, 50]} />
             <meshStandardMaterial color={'lightgrey'} />
         </mesh>
@@ -41,11 +43,16 @@ function Sphere(props: ThreeElements['mesh']) {
 }
 
 function TorusKnot(props: ThreeElements['mesh']) {
+    const ref = useRef<THREE.Mesh>(null!) // null! avoids typescript non-null checks
+    useFrame((state, delta) => (ref.current.rotation.y += delta))
     return (
-        <mesh {...props}>
-            <torusKnotGeometry args={[1, 0.4, 100, 16]} />
-            <meshStandardMaterial color={'green'} />
-        </mesh>
+        <>
+            <Environment background={false} files="metro_noord_1k.hdr" />
+            <mesh {...props} ref={ref}>
+                <torusKnotGeometry args={[1, 0.4, 300, 16]} />
+                <meshStandardMaterial color={'white'} metalness={1} roughness={0}/>
+            </mesh>
+        </>
     )
 }
 
@@ -85,18 +92,63 @@ const helixPath = new THREE.CatmullRomCurve3(createHelixPath(3, 5, 1.5, 100), fa
 console.log(helixPath);
 
 function ExtrudedStar(props: ThreeElements['mesh']) {
+    const ref = useRef<THREE.Mesh>(null!) // null! avoids typescript non-null checks
+    useFrame((state, delta) => (ref.current.rotation.y += delta))
     return (
-    <mesh {...props}>
-        <extrudeGeometry
-            args={[
-                createStarShape(),
-                {bevelEnabled: false, extrudePath: helixPath, steps: 300},
-            ]}
-            rotateY={Math.PI / 2}
-        />
-        <meshStandardMaterial color="orange" />
-    </mesh>
+        <>
+            <Environment background={false} files="metro_noord_1k.hdr" />
+            <mesh {...props} ref={ref}>
+                <extrudeGeometry
+                    args={[
+                        createStarShape(),
+                        {bevelEnabled: false, extrudePath: helixPath, steps: 1000},
+                    ]}
+                    rotateY={Math.PI / 2}
+                />
+                <meshStandardMaterial color="white" roughness={.1} metalness={1} />
+            </mesh>
+        </>
+    );
+};
+
+// https://fonts.google.com/specimen/Coiny?lang=en_Latn&script=Latn&categoryFilters=Feeling:%2FExpressive%2FPlayful
+
+
+
+
+const loader = new FontLoader();
+
+const correctedBubbleFont = {
+  ...bubbleFont,
+  original_font_information: {
+    ...bubbleFont.original_font_information,
+    format: bubbleFont.original_font_information.format.toString(),
+  },
+};
+const font = loader.parse(correctedBubbleFont);
+
+function BubbleText(props: ThreeElements['mesh']) {
+    const textGeometry = new TextGeometry("Bubble!", {
+        font,
+        size: 1,
+        bevelEnabled: false,
+        bevelSize: 0.1,
+        bevelThickness: 0.1,
+        bevelSegments: 10,
+        depth: 0.5,
+    });
+      
+    const textMaterial = new THREE.MeshStandardMaterial({
+        color: "white",
+        roughness: 0.05,
+        metalness: 1,
+    });
+    return (
+        <>
+        <Environment background={false} files="autumn_field_puresky_1k.hdr" />
+        <mesh {...props} geometry={textGeometry} material={textMaterial} />
+        </>
     );
   };
 
-export { Box, Background, Sphere, TorusKnot, ExtrudedStar };
+export { Box, Background, Sphere, TorusKnot, ExtrudedStar, BubbleText };
