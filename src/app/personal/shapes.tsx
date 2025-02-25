@@ -80,7 +80,7 @@ const createHelixPath = (turns: number, height: number, radius: number, points: 
     for (let i = 0; i <= points; i++) {
         const angle = i * angleStep;
         const x = radius * Math.cos(angle);
-        const y = i * heightStep;
+        const y = i * heightStep - height / 2;
         const z = radius * Math.sin(angle);
         path.push(new THREE.Vector3(x, y, z));
     }

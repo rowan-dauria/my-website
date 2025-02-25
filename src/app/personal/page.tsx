@@ -19,7 +19,7 @@ export default function PersonalPage() {
             <p className="personal-page__description">This is a personal page.</p>
             <Canvas
             style={{flex: 1, width: '100%', height: '100%'}}
-            camera={{ position: [ 0, 2, 10] }}
+            camera={{ position: [ 0, -1, 7] }}
             >
                 {/* <TorusKnot position={[0, 0, 0]} /> */}
                 {/* <ambientLight /> */}
