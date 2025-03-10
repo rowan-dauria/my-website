@@ -89,7 +89,6 @@ const createHelixPath = (turns: number, height: number, radius: number, points: 
 };
 
 const helixPath = new THREE.CatmullRomCurve3(createHelixPath(3, 5, 1.5, 100), false);
-console.log(helixPath);
 
 function ExtrudedStar(props: ThreeElements['mesh']) {
     const ref = useRef<THREE.Mesh>(null!) // null! avoids typescript non-null checks
