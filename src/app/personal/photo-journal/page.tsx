@@ -44,7 +44,13 @@ export default function JournalPage() {
     return(
         <>
         <Header />
-        <main className="flex flex-col items-center justify-center w-full">
+        <main className="
+            flex 
+            flex-col 
+            items-center 
+            justify-center 
+            w-full
+        ">
             {JournalEntryComps}
         </main>
         </>
@@ -61,11 +67,34 @@ function Header() {
 
 function JournalEntry() {
     return(
-        <div className="flex flex-col items-center justify-center ">
-            <Image src="https://picsum.photos/200/300" alt="random image" height={300} width={200} />
-            <h2>Journal Entry</h2>
-            <p>This is a journal entry.</p>
+        <div className="
+            w-full
+            py-2
+            px-4
+        ">
+            <div className="
+                w-full
+                flex 
+                flex-row 
+                items-center 
+                justify-left 
+                border-2
+                border-[color:var(--foreground)]
+            ">
+                <Image
+                    src="https://picsum.photos/300/300"
+                    alt="random image" 
+                    height={300} 
+                    width={300} 
+                    className="m-2"
+                />
+                <div className="m-2">
+                <h2>Journal Entry</h2>
+                <p>This is a journal entry.</p>
+                </div>
+            </div>
         </div>
+
     )
 }
 // // Built-in next js functionality for static site generation
