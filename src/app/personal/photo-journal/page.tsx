@@ -1,4 +1,4 @@
-import Image  from 'next/image'
+import Image from 'next/image'
 
 type JournalEntryData = {
     photos: Array<{ id: string, author: string, url: string }>,
@@ -6,6 +6,8 @@ type JournalEntryData = {
     createdDate: string,
     location: string,
 }
+
+const randID = () => Math.floor(Math.random() * 1000)
 
 // some dummy data to test the journal entry component
 const journalEntries: JournalEntryData[] = [
@@ -35,24 +37,26 @@ const journalEntries: JournalEntryData[] = [
     },
 ]
 
+// could do a photo grid layout? with each photo clickable to display the journal entry
+
 export default function JournalPage() {
     const JournalEntryComps = journalEntries.map((entry) => {
         return (
             <JournalEntry key={entry.createdDate} />
         )
     })
-    return(
+    return (
         <>
-        <Header />
-        <main className="
-            flex 
-            flex-col 
-            items-center 
-            justify-center 
+            <Header />
+            <main className="
+            flex
+            flex-col
+            items-center
+            justify-center
             w-full
         ">
-            {JournalEntryComps}
-        </main>
+                {JournalEntryComps}
+            </main>
         </>
     )
 }
@@ -66,7 +70,7 @@ function Header() {
 }
 
 function JournalEntry() {
-    return(
+    return (
         <div className="
             w-full
             py-2
@@ -74,23 +78,23 @@ function JournalEntry() {
         ">
             <div className="
                 w-full
-                flex 
-                flex-row 
-                items-center 
-                justify-left 
+                flex
+                flex-row
+                items-center
+                justify-left
                 border-2
                 border-[color:var(--foreground)]
             ">
                 <Image
-                    src="https://picsum.photos/300/300"
-                    alt="random image" 
-                    height={300} 
-                    width={300} 
+                    src={`https://picsum.photos/id/${randID()}/500/300`}
+                    alt="random image"
+                    height={300}
+                    width={500}
                     className="m-2"
                 />
                 <div className="m-2">
-                <h2>Journal Entry</h2>
-                <p>This is a journal entry.</p>
+                    <h2>Journal Entry</h2>
+                    <p>This is a journal entry.</p>
                 </div>
             </div>
         </div>
