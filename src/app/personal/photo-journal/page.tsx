@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import CloudinaryImage from "./CloudinaryImage"
 
 type JournalEntryData = {
     photos: Array<{ id: string, author: string, url: string }>,
@@ -7,30 +7,29 @@ type JournalEntryData = {
     location: string,
 }
 
-const randID = () => Math.floor(Math.random() * 1000)
 
 // some dummy data to test the journal entry component
 const journalEntries: JournalEntryData[] = [
     {
-        photos: [{ id: '1', author: 'Author 1', url: 'https://picsum.photos/id/1/200/300' }],
+        photos: [{ id: 'example-folder/jdvv5lazeezq7zpskiaa', author: 'Author 1', url: '' }],
         description: 'This is the first journal entry.',
         createdDate: '2023-01-01',
         location: 'Location 1',
     },
     {
-        photos: [{ id: '2', author: 'Author 2', url: 'https://picsum.photos/id/2/200/300' }],
+        photos: [{ id: 'example-folder/dkeyimkziigjsobkjypa', author: 'Author 2', url: '' }],
         description: 'This is the second journal entry.',
         createdDate: '2023-02-01',
         location: 'Location 2',
     },
     {
-        photos: [{ id: '3', author: 'Author 3', url: 'https://picsum.photos/id/3/200/300' }],
+        photos: [{ id: 'example-folder/u4u9wuny1klxen5rr4tm', author: 'Author 3', url: '' }],
         description: 'This is the third journal entry.',
         createdDate: '2023-03-01',
         location: 'Location 3',
     },
     {
-        photos: [{ id: '4', author: 'Author 4', url: 'https://picsum.photos/id/4/200/300' }],
+        photos: [{ id: 'venice-2024/l9iqs2rwv91zxns9bmax', author: 'Author 4', url: '' }],
         description: 'This is the fourth journal entry.',
         createdDate: '2023-04-01',
         location: 'Location 4',
@@ -42,7 +41,7 @@ const journalEntries: JournalEntryData[] = [
 export default function JournalPage() {
     const JournalEntryComps = journalEntries.map((entry) => {
         return (
-            <JournalEntry key={entry.createdDate} />
+            <JournalEntry key={entry.createdDate} imageID={entry.photos[0].id} />
         )
     })
     return (
@@ -72,7 +71,7 @@ function Header() {
     )
 }
 
-function JournalEntry() {
+function JournalEntry({ imageID }: { imageID: string }) {
     return (
         <div className="
             w-32 h-32 p-1
@@ -87,12 +86,11 @@ function JournalEntry() {
                 justify-center
                 overflow-hidden
             ">
-                <Image
-                    src={`https://picsum.photos/id/${randID()}/500/500`}
-                    alt="random image"
+                <CloudinaryImage
+                    src={imageID}
+                    alt="Image description"
                     height={500}
                     width={500}
-                    className="m-2"
                 />
             </div>
         </div>
