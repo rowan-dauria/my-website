@@ -49,11 +49,14 @@ export default function JournalPage() {
         <>
             <Header />
             <main className="
-            flex
-            flex-col
-            items-center
-            justify-center
-            w-full
+                flex
+                flex-wrap
+                items-start
+                justify-start
+                gap-2
+                mx-auto
+                max-w-screen-lg
+
         ">
                 {JournalEntryComps}
             </main>
@@ -72,30 +75,25 @@ function Header() {
 function JournalEntry() {
     return (
         <div className="
-            w-full
-            py-2
-            px-4
+            w-32 h-32 p-1
+            sm:w-48 sm:h-48 sm:p-2
+            md:w-64 md:h-64 md:p-2
         ">
             <div className="
                 w-full
+                h-full
                 flex
-                flex-row
                 items-center
-                justify-left
-                border-2
-                border-[color:var(--foreground)]
+                justify-center
+                overflow-hidden
             ">
                 <Image
-                    src={`https://picsum.photos/id/${randID()}/500/300`}
+                    src={`https://picsum.photos/id/${randID()}/500/500`}
                     alt="random image"
-                    height={300}
+                    height={500}
                     width={500}
                     className="m-2"
                 />
-                <div className="m-2">
-                    <h2>Journal Entry</h2>
-                    <p>This is a journal entry.</p>
-                </div>
             </div>
         </div>
 
