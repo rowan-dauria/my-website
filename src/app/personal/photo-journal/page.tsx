@@ -11,19 +11,19 @@ type JournalEntryData = {
 // some dummy data to test the journal entry component
 const journalEntries: JournalEntryData[] = [
     {
-        photos: [{ id: 'example-folder/jdvv5lazeezq7zpskiaa', author: 'Author 1', url: '' }],
+        photos: [{ id: 'venice-2024/jdvv5lazeezq7zpskiaa', author: 'Author 1', url: '' }],
         description: 'This is the first journal entry.',
         createdDate: '2023-01-01',
         location: 'Location 1',
     },
     {
-        photos: [{ id: 'example-folder/dkeyimkziigjsobkjypa', author: 'Author 2', url: '' }],
+        photos: [{ id: 'venice-2024/dkeyimkziigjsobkjypa', author: 'Author 2', url: '' }],
         description: 'This is the second journal entry.',
         createdDate: '2023-02-01',
         location: 'Location 2',
     },
     {
-        photos: [{ id: 'example-folder/u4u9wuny1klxen5rr4tm', author: 'Author 3', url: '' }],
+        photos: [{ id: 'venice-2024/u4u9wuny1klxen5rr4tm', author: 'Author 3', url: '' }],
         description: 'This is the third journal entry.',
         createdDate: '2023-03-01',
         location: 'Location 3',
