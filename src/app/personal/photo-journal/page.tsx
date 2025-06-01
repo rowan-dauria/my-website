@@ -1,49 +1,72 @@
 import CloudinaryImage from "./CloudinaryImage"
+import supabase from "@/utils/supabase"
+import cloudinary from "@/utils/cloudinary"
 
 type JournalEntryData = {
-    photos: Array<{ id: string, author: string, url: string }>,
-    description: string,
-    createdDate: string,
-    location: string,
+    id: number,
+    title: string,
+    content: string,
+    created_at: string,
+    folder: string,
 }
 
 
-// some dummy data to test the journal entry component
-const journalEntries: JournalEntryData[] = [
-    {
-        photos: [{ id: 'venice-2024/jdvv5lazeezq7zpskiaa', author: 'Author 1', url: '' }],
-        description: 'This is the first journal entry.',
-        createdDate: '2023-01-01',
-        location: 'Location 1',
-    },
-    {
-        photos: [{ id: 'venice-2024/dkeyimkziigjsobkjypa', author: 'Author 2', url: '' }],
-        description: 'This is the second journal entry.',
-        createdDate: '2023-02-01',
-        location: 'Location 2',
-    },
-    {
-        photos: [{ id: 'venice-2024/u4u9wuny1klxen5rr4tm', author: 'Author 3', url: '' }],
-        description: 'This is the third journal entry.',
-        createdDate: '2023-03-01',
-        location: 'Location 3',
-    },
-    {
-        photos: [{ id: 'venice-2024/l9iqs2rwv91zxns9bmax', author: 'Author 4', url: '' }],
-        description: 'This is the fourth journal entry.',
-        createdDate: '2023-04-01',
-        location: 'Location 4',
-    },
-]
+async function fetchJournalEntries(): Promise<JournalEntryData[]> {
+    const { data, error } = await supabase
+        .from<string, JournalEntryData>("journal_entries")
+        .select("*")
 
-// could do a photo grid layout? with each photo clickable to display the journal entry
+    if (error) {
+        console.error('Error fetching journal entries:', error)
+        return []
+    }
 
-export default function JournalPage() {
-    const JournalEntryComps = journalEntries.map((entry) => {
+    return (data)
+}
+
+async function fetchThumbnailPublicIDs(): Promise<{ [key: string]: string }> {
+    const resources = await cloudinary.api.resources_by_tag("thumbnail")
+    const thumbnailPublicIDs: { [key: string]: string } = {}
+    resources.resources.forEach((resource) => {
+        // assumes asset folder is the same as cloudinary_tag
+        if (!resource.asset_folder) {
+            console.error(`Resource ${resource.public_id} does not have an asset folder`)
+            return
+        }
+        thumbnailPublicIDs[resource.asset_folder] = resource.public_id
+    })
+    return thumbnailPublicIDs
+}
+
+
+
+
+export default async function JournalPage() {
+    const journalEntries = await fetchJournalEntries()
+    if (!journalEntries || journalEntries.length === 0) {
         return (
-            <JournalEntry key={entry.createdDate} imageID={entry.photos[0].id} />
+            <>
+                <Header />
+                <main className="flex items-center justify-center h-screen">
+                    <p>No journal entries found.</p>
+                </main>
+            </>
+        )
+    }
+    // Fetch thumbnail URLs from Cloudinary
+    const thumbnailPublicIDs = await fetchThumbnailPublicIDs()
+    if (!thumbnailPublicIDs || Object.keys(thumbnailPublicIDs).length === 0) {
+        console.error('No thumbnail URLs found')
+    }
+    // map the journal entries to components
+    const JournalEntryComps = journalEntries.map((entry) => {
+        const thumbnailPublicID = thumbnailPublicIDs[entry.folder]
+        if (!thumbnailPublicID) { console.error(`No thumbnail URL found for asset folder: ${entry.folder}`) }
+        return (
+            <JournalEntry key={entry.created_at} thumbnailPublicID={thumbnailPublicID} />
         )
     })
+
     return (
         <>
             <Header />
@@ -71,14 +94,15 @@ function Header() {
     )
 }
 
-function JournalEntry({ imageID }: { imageID: string }) {
+function JournalEntry({ thumbnailPublicID }: { thumbnailPublicID: string }) {
     return (
         <div className="
             w-32 h-32 p-1
             sm:w-48 sm:h-48 sm:p-2
             md:w-64 md:h-64 md:p-2
         ">
-            <div className="
+            <div
+                className="
                 w-full
                 h-full
                 flex
@@ -87,7 +111,7 @@ function JournalEntry({ imageID }: { imageID: string }) {
                 overflow-hidden
             ">
                 <CloudinaryImage
-                    src={imageID}
+                    src={thumbnailPublicID}
                     alt="Image description"
                     height={500}
                     width={500}

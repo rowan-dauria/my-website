@@ -9,13 +9,21 @@ export default function CloudinaryImage(
         height: number,
         alt: string,
     }) {
+    const onClick = () => {
+        console.log("Image clicked:", src)
+    }
     return (
-        <CldImage
-            width={width}
-            height={height}
-            src={src}
-            alt={alt}
-            {...props}
-        />
+        <button
+            className="w-full h-full flex items-center justify-center"
+            onClick={onClick}
+        >
+            <CldImage
+                width={width}
+                height={height}
+                src={src}
+                alt={alt}
+                {...props}
+            />
+        </button>
     )
 }
