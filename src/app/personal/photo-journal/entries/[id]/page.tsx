@@ -3,15 +3,16 @@ import { fetchEntryImagePublicIDs } from "@/utils/cloudinary"
 import { notFound } from "next/navigation"
 import Slideshow from "./slideshow"
 
-export default async function journalEntry({ params }: { params: { id: string } }) {
+export default async function journalEntry({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
     const journalEntries = await fetchJournalEntries()
-    const journalEntry = journalEntries.find(entry => entry.id.toString() === params.id)
+    const journalEntry = journalEntries.find(entry => entry.id.toString() === id)
     if (!journalEntry) {
         notFound()
     }
     const entryImagePublicIDs = await fetchEntryImagePublicIDs(journalEntry.folder)
     if (!entryImagePublicIDs || entryImagePublicIDs.length === 0) {
-        console.error(`No images found for journal entry with ID: ${params.id}`)
+        console.error(`No images found for journal entry with ID: ${id}`)
         notFound()
     }
 
