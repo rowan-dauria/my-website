@@ -1,45 +1,6 @@
-import CloudinaryImage from "./CloudinaryImage"
-import supabase from "@/utils/supabase"
-import cloudinary from "@/utils/cloudinary"
-
-type JournalEntryData = {
-    id: number,
-    title: string,
-    content: string,
-    created_at: string,
-    folder: string,
-}
-
-
-async function fetchJournalEntries(): Promise<JournalEntryData[]> {
-    const { data, error } = await supabase
-        .from<string, JournalEntryData>("journal_entries")
-        .select("*")
-
-    if (error) {
-        console.error('Error fetching journal entries:', error)
-        return []
-    }
-
-    return (data)
-}
-
-async function fetchThumbnailPublicIDs(): Promise<{ [key: string]: string }> {
-    const resources = await cloudinary.api.resources_by_tag("thumbnail")
-    const thumbnailPublicIDs: { [key: string]: string } = {}
-    resources.resources.forEach((resource) => {
-        // assumes asset folder is the same as cloudinary_tag
-        if (!resource.asset_folder) {
-            console.error(`Resource ${resource.public_id} does not have an asset folder`)
-            return
-        }
-        thumbnailPublicIDs[resource.asset_folder] = resource.public_id
-    })
-    return thumbnailPublicIDs
-}
-
-
-
+import CloudinaryImage from "../../../components/CloudinaryImage"
+import { fetchJournalEntries } from "@/utils/supabase"
+import { fetchThumbnailPublicIDs } from "@/utils/cloudinary"
 
 export default async function JournalPage() {
     const journalEntries = await fetchJournalEntries()
@@ -63,7 +24,11 @@ export default async function JournalPage() {
         const thumbnailPublicID = thumbnailPublicIDs[entry.folder]
         if (!thumbnailPublicID) { console.error(`No thumbnail URL found for asset folder: ${entry.folder}`) }
         return (
-            <JournalEntry key={entry.created_at} thumbnailPublicID={thumbnailPublicID} />
+            <JournalEntry
+                key={entry.created_at}
+                thumbnailPublicID={thumbnailPublicID}
+                journalEntryID={entry.id}
+            />
         )
     })
 
@@ -94,7 +59,14 @@ function Header() {
     )
 }
 
-function JournalEntry({ thumbnailPublicID }: { thumbnailPublicID: string }) {
+function JournalEntry(
+    {
+        thumbnailPublicID,
+        journalEntryID,
+    }: {
+        thumbnailPublicID: string
+        journalEntryID: number, // optional for now, can be used later for more details
+    }) {
     return (
         <div className="
             w-32 h-32 p-1
@@ -115,6 +87,7 @@ function JournalEntry({ thumbnailPublicID }: { thumbnailPublicID: string }) {
                     alt="Image description"
                     height={500}
                     width={500}
+                    journalEntryID={journalEntryID}
                 />
             </div>
         </div>
