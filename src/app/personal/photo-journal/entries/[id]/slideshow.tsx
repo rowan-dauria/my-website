@@ -12,6 +12,7 @@ export default function Slideshow({ publicIds }: SlideshowProps) {
     const [startX, setStartX] = useState(0);
     const [translateX, setTranslateX] = useState(0);
     const [imageWidth, setImageWidth] = useState(0);
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const goToPrevious = () => {
@@ -56,8 +57,12 @@ export default function Slideshow({ publicIds }: SlideshowProps) {
         setStartX(0);
     };
 
-    useEffect(() => {
+    const checkTouchDevice = () => {
+        setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
 
+    useEffect(() => {
+        checkTouchDevice();
 
         const updateImageWidth = () => {
             setImageWidth(window.innerWidth <= 896 ? window.innerWidth : 896);
@@ -108,7 +113,23 @@ export default function Slideshow({ publicIds }: SlideshowProps) {
                     ))}
                 </div>
 
-
+                {/* Show navigation buttons only on non-touch devices */}
+                {!isTouchDevice && publicIds.length > 1 && (
+                    <>
+                        <button
+                            onClick={goToPrevious}
+                            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70"
+                        >
+                            ←
+                        </button>
+                        <button
+                            onClick={goToNext}
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70"
+                        >
+                            →
+                        </button>
+                    </>
+                )}
             </div>
 
             {publicIds.length > 1 && (
@@ -117,7 +138,7 @@ export default function Slideshow({ publicIds }: SlideshowProps) {
                         <button
                             key={index}
                             onClick={() => setCurrentIndex(index)}
-                            className={`w-3 h-3 rounded-full ${index === currentIndex ? 'bg-blue-500' : 'bg-gray-300'
+                            className={`w-3 h-3 rounded-full ${index === currentIndex ? 'bg-gray-600' : 'bg-gray-300'
                                 }`}
                         />
                     ))}
