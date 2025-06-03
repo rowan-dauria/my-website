@@ -17,8 +17,15 @@ export default async function journalEntry({ params }: { params: Promise<{ id: s
     }
 
     return (
-        <div className="flex items-center justify-center h-screen">
+        <div className="flex flex-col items-center justify-center min-h-screen">
             <Slideshow publicIds={entryImagePublicIDs} />
+            <div className="mt-8 max-w-4xl mx-auto px-4">
+                <div className="prose prose-lg max-w-none">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                        {journalEntry.content}
+                    </p>
+                </div>
+            </div>
         </div>
     )
 }

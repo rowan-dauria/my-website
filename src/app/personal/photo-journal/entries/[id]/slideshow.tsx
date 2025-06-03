@@ -41,7 +41,7 @@ export default function Slideshow({ publicIds }: SlideshowProps) {
 
     return (
         <div className="relative w-full max-w-4xl mx-auto">
-            <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
+            <div className="relative aspect-video bg-gray-100 overflow-hidden">
                 <CloudinaryImage
                     src={publicIds[currentIndex]}
                     alt={`Slide ${currentIndex + 1}`}
