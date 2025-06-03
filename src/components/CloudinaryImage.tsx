@@ -14,7 +14,7 @@ export default function CloudinaryImage(
     }) {
     const router = useRouter()
     const onClick = () => {
-        if (!journalEntryID) {
+        if (!journalEntryID || journalEntryID <= 0) {
             return
         }
         router.push(`/personal/photo-journal/entries/${journalEntryID}`) // Navigate to the journal entry page

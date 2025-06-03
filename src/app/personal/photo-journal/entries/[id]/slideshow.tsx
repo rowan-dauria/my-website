@@ -1,12 +1,46 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
-import CloudinaryImage from '@/components/CloudinaryImage';
+import { useRouter } from 'next/navigation';
+import { CldImage } from 'next-cloudinary';
 
 interface SlideshowProps {
     publicIds: string[];
+    journalEntryID?: number;
 }
 
-export default function Slideshow({ publicIds }: SlideshowProps) {
+function SlideShowImage(
+    { src, width, height, alt, journalEntryID, ...props }: {
+        src: string,
+        width: number,
+        height: number,
+        alt: string,
+        journalEntryID?: number,
+    }) {
+    const router = useRouter()
+    const onClick = () => {
+        if (!journalEntryID || journalEntryID <= 0) {
+            return
+        }
+        router.push(`/personal/photo-journal/entries/${journalEntryID}`)
+    }
+    return (
+        <button
+            className={`w-full h-full flex items-center justify-center
+                ${journalEntryID ? "hover:opacity-80" : "cursor-default"}`}
+            onClick={onClick}
+        >
+            <CldImage
+                width={width}
+                height={height}
+                src={src}
+                alt={alt}
+                {...props}
+            />
+        </button>
+    )
+}
+
+export default function Slideshow({ publicIds, journalEntryID }: SlideshowProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -68,7 +102,7 @@ export default function Slideshow({ publicIds }: SlideshowProps) {
             setImageWidth(window.innerWidth <= 896 ? window.innerWidth : 896);
         }
 
-        updateImageWidth(); // Set initial width
+        updateImageWidth();
         window.addEventListener('resize', updateImageWidth);
 
         const urlStem = 'https://res.cloudinary.com/do1jm1nuc/image/upload/v1742830727/'
@@ -102,12 +136,12 @@ export default function Slideshow({ publicIds }: SlideshowProps) {
                 >
                     {publicIds.map((publicId, index) => (
                         <div key={index} className="min-w-full h-full flex-shrink-0">
-                            <CloudinaryImage
+                            <SlideShowImage
                                 src={publicId}
                                 alt={`Slide ${index + 1}`}
                                 width={imageWidth}
                                 height={Math.round(imageWidth * 0.6)}
-                                journalEntryID={0}
+                                journalEntryID={journalEntryID}
                             />
                         </div>
                     ))}
