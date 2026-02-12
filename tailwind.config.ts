@@ -12,6 +12,14 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      typography: ({ theme }: { theme: (path: string) => string }) => ({
+        invert: {
+          css: {
+            '--tw-prose-pre-bg': theme('colors.gray.800'),
+            '--tw-prose-code-bg': theme('colors.gray.800'),
+          },
+        },
+      }),
     },
   },
   plugins: [
