@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function About() {
@@ -16,16 +17,19 @@ export default function About() {
                 {/* Hero Section */}
                 <div className="flex flex-col sm:flex-row items-center gap-8 w-full">
                     <div className="relative w-32 h-32 sm:w-40 sm:h-40 shrink-0">
-                        {/* Placeholder for profile image - using a simple div for now */}
-                        <div className="w-full h-full rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-4xl text-white font-bold shadow-lg">
-                            RD
-                        </div>
+                        <Image
+                            src="/profile-image.jpg"
+                            alt="Rowan d'Auria"
+                            fill
+                            className="rounded-full object-cover shadow-lg"
+                            priority
+                        />
                     </div>
 
                     <div className="text-center sm:text-left">
-                        <h1 className="text-3xl sm:text-4xl font-bold mb-2">Rowan Dauria</h1>
+                        <h1 className="text-3xl sm:text-4xl font-bold mb-2">Rowan d&apos;Auria</h1>
                         <p className="text-xl text-gray-600 dark:text-gray-400">
-                            Full Stack Developer
+                            Stats and ML @ Cambridge
                         </p>
                     </div>
                 </div>
@@ -33,13 +37,12 @@ export default function About() {
                 {/* Bio Section */}
                 <div className="prose dark:prose-invert mt-8 w-full">
                     <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
-                        Hi, I&apos;m Rowan. I build accessible, pixel-perfect, and performant web experiences.
-                        I love exploring new technologies and have a passion for creating intuitive user interfaces.
+                        I am an MPhil student at the University of Cambridge, where I'm studing LLM interpretability.
+
                     </p>
 
                     <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mt-4">
-                        Currently, I&apos;m focused on building full-stack applications with Next.js and React.
-                        When I&apos;m not coding, you can find me hiking, reading sci-fi novels, or experimenting with new recipes.
+                        Before this, I was a software engineer.
                     </p>
                 </div>
 
