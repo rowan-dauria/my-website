@@ -1,5 +1,8 @@
 import { getAllPostIds, getPostData } from '@/lib/posts';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 export async function generateStaticParams() {
     const paths = getAllPostIds();
@@ -28,10 +31,14 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                     <div className="text-gray-500 mb-8">
                         <time dateTime={postData.date}>{postData.date}</time>
                     </div>
-                    <div
-                        className="prose dark:prose-invert max-w-none"
-                        dangerouslySetInnerHTML={{ __html: postData.contentHtml || '' }}
-                    />
+                    <div className="prose dark:prose-invert max-w-none">
+                        <ReactMarkdown
+                            remarkPlugins={[remarkMath]}
+                            rehypePlugins={[rehypeKatex]}
+                        >
+                            {postData.contentHtml || ''}
+                        </ReactMarkdown>
+                    </div>
                 </article>
             </main>
         </div>

@@ -1,11 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
-import remarkMath from 'remark-math';
-import remarkRehype from 'remark-rehype';
-import rehypeKatex from 'rehype-katex';
-import rehypeStringify from 'rehype-stringify';
+
 
 const postsDirectory = path.join(process.cwd(), 'src/content/posts');
 
@@ -78,23 +74,11 @@ export async function getPostData(id: string): Promise<PostData> {
     // Use gray-matter to parse the post metadata section
     const matterResult = matter(fileContents);
 
-    // Use remark to convert markdown into HTML string
-    // Use remark-math for parsing math logic
-    // Use remark-rehype to transform to HTML AST
-    // Use rehype-katex to render math in HTML AST
-    // Use rehype-stringify to transform HTML AST to string
-    const processedContent = await remark()
-        .use(remarkMath)
-        .use(remarkRehype)
-        .use(rehypeKatex, { output: 'html' }) // Force HTML output only
-        .use(rehypeStringify)
-        .process(matterResult.content);
-    const contentHtml = processedContent.toString();
-
-    // Combine the data with the id and contentHtml
+    // Return the content directly without processing with remark/rehype
+    // Rendering will be handled by ReactMarkdown on the client side
     return {
         id,
-        contentHtml,
+        contentHtml: matterResult.content,
         ...(matterResult.data as { date: string; title: string }),
     };
 }
