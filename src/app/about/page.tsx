@@ -43,6 +43,16 @@ export default function About() {
                     </p>
                 </div>
 
+                {/* Blog Button */}
+                <div className="mt-8">
+                    <Link
+                        href="/blog"
+                        className="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors inline-block shadow-sm hover:shadow"
+                    >
+                        Read my Blog →
+                    </Link>
+                </div>
+
                 {/* Social Links */}
                 <div className="flex gap-6 mt-8">
                     <SocialLink href="https://github.com" label="GitHub" icon="github" />
