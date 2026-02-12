@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export default function About() {
@@ -34,13 +33,13 @@ export default function About() {
                 {/* Bio Section */}
                 <div className="prose dark:prose-invert mt-8 w-full">
                     <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
-                        Hi, I'm Rowan. I build accessible, pixel-perfect, and performant web experiences.
+                        Hi, I&apos;m Rowan. I build accessible, pixel-perfect, and performant web experiences.
                         I love exploring new technologies and have a passion for creating intuitive user interfaces.
                     </p>
 
                     <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mt-4">
-                        Currently, I'm focused on building full-stack applications with Next.js and React.
-                        When I'm not coding, you can find me hiking, reading sci-fi novels, or experimenting with new recipes.
+                        Currently, I&apos;m focused on building full-stack applications with Next.js and React.
+                        When I&apos;m not coding, you can find me hiking, reading sci-fi novels, or experimenting with new recipes.
                     </p>
                 </div>
 
