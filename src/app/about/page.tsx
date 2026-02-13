@@ -59,7 +59,7 @@ export default function About() {
                 {/* Social Links */}
                 <div className="flex gap-6 mt-8">
                     <SocialLink href="https://github.com/rowan-dauria" label="GitHub" icon="github" />
-                    <SocialLink href="https://linkedin.com/in/rowan-dauria" label="LinkedIn" icon="linkedin" />
+                    <SocialLink href="https://www.linkedin.com/in/rowan-d-auria" label="LinkedIn" icon="linkedin" />
                     <SocialLink href="mailto:rowandauria1@gmail.com" label="Email" icon="email" />
                 </div>
             </main>
