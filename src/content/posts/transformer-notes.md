@@ -87,4 +87,31 @@ $$ h_i \leftarrow \gamma \hat{h}_i + \delta, \forall i \in \mathcal{B} $$
   * Enables higher learning rates
   * Is a form or regularisation (changing network parameters according to noisy batch statistics).
 
-## Self-Attention
+## Self Attention
+
+### Image vs Text Processing
+
+* Residual networks were first introduced for image classification tasks (He et al., 2016). But we are interested in their role for text processing.
+
+* CNNs use parameter sharing to reduce the dimensionality of their input. In a CNN, parameter sharing is the kernel that slides across the input, because the *parameters of the kernel don't change* depending on what part of the input they are processing.
+
+* The added difficulty with text processing is that text inputs can vary in size, and their is no easy way to resize them.
+
+### Dot-product Self Attention
+
+* Dot-product self-attention gives us parameter sharing, in addition to **relations between words**.
+
+* The input of a self-attention block is $N$ inputs of dim $D \times 1$.
+   A **value** $\mathbf{v}_m$ is computed for each input $\mathbf{x}_m$:
+  $$
+  \mathbf{v}_m = \boldsymbol{\beta}_v + \boldsymbol{\Omega}_v \mathbf{x}_m
+  $$
+  where $\boldsymbol{\beta}_v \in \mathbb{R}^{D \times 1}$ and $\boldsymbol{\Omega}_v \in \mathbb{R}^{D \times D}$ represent biases and weights, respectively.
+
+* The $n^{th}$ output $\mathbf{sa}_n[\mathbf{x}_1, \dots, \mathbf{x}_N]$ is a weighted sum of all the values $\mathbf{v}_1, \dots, \mathbf{v}_N$:
+  $$
+  \mathbf{sa}_n[\mathbf{x}_1, \dots, \mathbf{x}_N] = \sum_{m=1}^N a[\mathbf{x}_m, \mathbf{x}_n] \mathbf{v}_m
+  $$
+
+* The scalar weight $a[\mathbf{x}_m, \mathbf{x}_n]$ is the **attention** that the $n^{th}$ output pays to input $\mathbf{x}_m$.
+* The $N$ weights $a[\bullet, \mathbf{x}_n]$ are non-negative and sum to one. Hence, the self-attention of the $n^{th}$ input can be thought of as a weighted sum over the *values of all the inputs*, weighted by how strongly they relate to to the $n^{th}$ input.
