@@ -115,3 +115,88 @@ $$ h_i \leftarrow \gamma \hat{h}_i + \delta, \forall i \in \mathcal{B} $$
 
 * The scalar weight $a[\mathbf{x}_m, \mathbf{x}_n]$ is the **attention** that the $n^{th}$ output pays to input $\mathbf{x}_m$.
 * The $N$ weights $a[\bullet, \mathbf{x}_n]$ are non-negative and sum to one. Hence, the self-attention of the $n^{th}$ input can be thought of as a weighted sum over the *values of all the inputs*, weighted by how strongly they relate to to the $n^{th}$ input.
+
+#### How to compute attention weights?
+
+* This is where keys and queries come into play. They are computed in the same way as values, with their own weights and biases
+
+$$
+\begin{aligned}
+\mathbf{q}_n &= \boldsymbol{\beta}_q + \boldsymbol{\Omega}_q \mathbf{x}_n \\
+\mathbf{k}_m &= \boldsymbol{\beta}_k + \boldsymbol{\Omega}_k \mathbf{x}_m
+\end{aligned}
+$$
+
+* The keys and queries are then used to compute attention weights with softmax
+
+$$
+\begin{aligned}
+a[\mathbf{x}_m, \mathbf{x}_n] &= \text{softmax}_m[\mathbf{k}_{\bullet}^T \mathbf{q}_n] \\
+&= \frac{\exp[\mathbf{k}_m^T \mathbf{q}_n]}{\sum_{m'=1}^{N} \exp[\mathbf{k}_{m'}^T \mathbf{q}_n]}
+\end{aligned}
+$$
+
+* This essentially computed the similarity between the $n$<sup>th</sup> token and all the other tokens
+
+* In matrix form this comes together as the below equation, where $\mathbf{X}$ is dimensions $D \times N$ where $N$ is the number of inputs and $D$ is the dimension of each input.
+
+$$
+\mathbf{Sa}[\mathbf{X}] = \mathbf{V}[\mathbf{X}] \cdot \text{Softmax}(\mathbf{K}[\mathbf{X}]^T \mathbf{Q}[\mathbf{X}])
+$$
+
+## Additional Methods for Self-Attention
+
+### Positional Encoding
+
+* How we encode the position of each input, so the attention head can differentiate `the woman ate the tomato` from `the tomato ate the woman`.
+
+* Define a positional encoding matrix of shape $D \times N$
+* Positional encoding gives each token position a **vector**, not just a single number.
+
+* So it needs to vary:
+
+  * **across columns**: to distinguish position 1 from position 2, 3, etc.
+  * **across rows**: so different components carry different parts of the positional signal.
+
+* In sinusoidal encodings, each row uses a **different frequency**. That makes each position’s full vector more distinctive.
+
+* If the encoding only varied across columns and was constant down the rows, each position would just be a **single scalar copied across all dimensions**, which is much less expressive.
+
+* Multiple frequencies help attention recover **relative positions** and capture both **short-range and long-range** patterns.
+
+### Scaled attention
+
+* Large dot-product values for some keys can dominate the operation and mean only large values are registered.
+
+* This makes gradients very small and makes the attention difficult to train.
+
+* Can be avoided by scaling the softmax input by $1/\sqrt{D_q}$
+
+$$
+\mathrm{SA}[\mathbf{X}]=\mathbf{V} \cdot \operatorname{Softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)
+$$
+
+### Multi-head attention
+
+* In practise, self-attention is usually applied multiple times in parallel.
+
+* Each attention head has it's own $\beta_{k}$,$\beta_{q}$,$\beta_{v}$ and $\Omega_{k}$,$\Omega_{q}$,$\Omega_{v}$, so they train independently.
+
+* The input is split into each attention head. For a $D \times N$ base input, the input into each head is $D/H \times N$.
+
+* They are recombined via concatenation and a final linear transform
+
+$$
+\mathrm{MhSa}[X] = \Omega_c \left[ \mathrm{Sa}_1[X]^T, \mathrm{Sa}_2[X]^T, \ldots, \mathrm{Sa}_H[X]^T \right]^T
+$$
+
+### Transformers
+
+* We now start to bring these ideas together
+
+![Transformer diagram](/transformer.svg)
+
+
+
+
+
