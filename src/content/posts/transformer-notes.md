@@ -196,6 +196,92 @@ $$
 
 ![Transformer diagram](/transformer.svg)
 
+### Words to vectors
+
+* How we map words to vectors that our transformer can process.
+
+## Tokenisation
+
+* A tokeniser splits the input up into tokens.
+
+* In practise, token != word, tokens represent subwords.
+
+* If we split up to inidividual letters, small vocabulary but the transformer would have to learn every possible relationship between letters.
+
+* If we split it up to words, we would need a huge vocabulary matrix to represent all permutations of all words.
+
+**Byte pair encoding:** Greedily merges common subwords based on their frequency.
+
+* Starts from individual letters, merges the most commonly seen pair, keeps doing this until the vocabulary size reaches a pre-determined limit.
+
+* For example, suppose our corpus contains `low`, `lowest`, `newer`, and `wider`.
+
+* We begin with character-level tokens:
+
+$$
+\texttt{l o w}, \quad \texttt{l o w e s t}, \quad \texttt{n e w e r}, \quad \texttt{w i d e r}
+$$
+
+* If `e r` is a common adjacent pair, BPE merges it into a single token `er`:
+
+$$
+\texttt{l o w}, \quad \texttt{l o w e s t}, \quad \texttt{n e w er}, \quad \texttt{w i d er}
+$$
+
+* If `l o` and then `lo w` are also frequent, we get the token `low`:
+
+$$
+\texttt{low}, \quad \texttt{low e s t}, \quad \texttt{n e w er}, \quad \texttt{w i d er}
+$$
+
+* So instead of learning only full words or only single characters, the tokenizer learns useful subwords like `low` and `er`.
+
+### Tokens to embeddings
+
+* We now know how to make our tokens, so how to we make our vectors (embeddings)?
+
+  * **Token index matrix:** $\mathbf{T} \in \mathbb{R}^{|\mathcal{V}| \times N}$. This is a one hot matrix, and it says where to find each token in the vocab matrix.
+  * **Vocabulary matrix:** $\boldsymbol{\Omega}_e \in \mathbb{R}^{D \times |\mathcal{V}|}$. A learned matrix that is a vector representation of each token.
+
+$$\mathbf{X} = \boldsymbol{\Omega}_e\mathbf{T}$$
+
+* In the above equation, $\mathbf{X}$ is the embedding matrix we pass to the transformer.
+
+## Encoders vs Decoders
+### Encoder Model
+
+* BERT is an encoder model consisting of 24 transformers in sequence.
+
+* It is trained to correctly predict missing words in bodies of text.
+
+* It is then fine-tuned on specific tasks
+
+### Decoder model
+* Modern LLMs are decorder transformers.
+
+* They are a type of **autoregressive model**. This is a statistical mdoel that uses **past data to predict future results**.
+
+* Do this via **masked self-attention**.
+
+#### Masked self-attention
+* To train an autoregressive transformer, the transformer should not use future tokens to predict the current token (this is cheating).
+* This is cheating because in production, there are no "future tokens" to inform the current token, future tokens only occur in training.
+* To prevent the transformer from considering future tokens, all queries that multiply with future keys (from future tokens) in the softmax function are set to $-\infty$.
+
+### How to choose the output token
+**Beam Search:** Track multiple possible sentences then choose the overally most likely one.
+
+* This is expensive.
+
+**Temp. Sampling:**
+$$
+p(w_i) = \frac{e^{y_i / T}}{\sum_j e^{y_j / T}}
+$$
+* $T=0$, greedy sampling
+* $T=0.5$, low randomness, more "correct"
+* $T=100$, more random, more "creative"
+
+**Top K:** Limit the temp sampling to the top K most likely words to avoid sampling from the long tail of unlikely tokens. Using an unlikely token can throw off the entire sentence generation.
 
 
 
