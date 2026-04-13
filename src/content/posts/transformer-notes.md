@@ -144,6 +144,8 @@ $$
 \mathbf{Sa}[\mathbf{X}] = \mathbf{V}[\mathbf{X}] \cdot \text{Softmax}(\mathbf{K}[\mathbf{X}]^T \mathbf{Q}[\mathbf{X}])
 $$
 
+* **NB:** In matrix form $\boldsymbol{\beta}_{\bullet} \rightarrow \boldsymbol{\beta}_{\bullet}\boldsymbol{1}^T$ but $\boldsymbol{\Omega}_{\bullet}$ remains the same ($\boldsymbol{\Omega}_{\bullet} \in \mathbb{R}^{D \times D}$). If you use $\boldsymbol{\Omega}_{\bullet}$ in both operations you will see it is valid for both.
+
 ## Additional Methods for Self-Attention
 
 ### Positional Encoding
